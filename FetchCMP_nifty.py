@@ -40,15 +40,17 @@ print(reqTime)
 reqSec = ocTime[14:16]
 intTime = int(reqTime[0:2])
 intSec = int(reqSec)
-
-if intTime >= 9 and intSec > 15 and intTime < 15 and intSec < 15:
-    while(intTime!=15 and intTime < 17):
+nowTime = fName.split(" IST")
+print(nowTime[0])
+print(fName)
+if intTime >= 9 and intTime < 16:
+    while(intTime!=15 ):
         print("Time: "+str(intTime))
     # NiftyTomorroLevels = "22386"
     # BankNiftyTomorrowLevels = "47172"
 
-        PE_NiftyTomorroLevels = 22358
-        PE_BankNiftyTomorrowLevels = 47277
+        PE_NiftyTomorroLevels = 22366
+        PE_BankNiftyTomorrowLevels = 22406
 
         CE_NiftyTomorroLevels=22398
         CE_BankNiftyTomorrowLevels=47317
@@ -157,18 +159,18 @@ if intTime >= 9 and intSec > 15 and intTime < 15 and intSec < 15:
         bnfLastPrice_pe = int(send_Bnflastprice()-20)
         bnfLastPrice_ce = int(send_Bnflastprice()+20)
         if(niftyLastPrice_pe==PE_NiftyTomorroLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR PE BO: "+str(niftyLastPrice_pe)+"\n"+"=========================\n"
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR PE BO: "+str(niftyLastPrice_pe)+"\n"+"=========================\n"
             requests.post(t_url)
         elif(niftyLastPrice_ce==CE_NiftyTomorroLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR CE BO: "+str(niftyLastPrice_ce)+"\n"+"=========================\n"
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR CE BO: "+str(niftyLastPrice_ce)+"\n"+"=========================\n"
             requests.post(t_url)
 
         if(bnfLastPrice_pe==PE_BankNiftyTomorrowLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR PE BO: "+str(bnfLastPrice_pe)+"\n"+"=========================\n"
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR PE BO: "+str(bnfLastPrice_pe)+"\n"+"=========================\n"
             requests.post(t_url)
 
         elif(bnfLastPrice_ce==PE_BankNiftyTomorrowLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR CE BO: "+str(bnfLastPrice_ce)+"\n"+"=========================\n"
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR CE BO: "+str(bnfLastPrice_ce)+"\n"+"=========================\n"
             requests.post(t_url)
         time.sleep(120)
         if(intTime>16):
