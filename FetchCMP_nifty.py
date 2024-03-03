@@ -5,16 +5,9 @@ import requests
 import json
 import math
 from datetime import datetime
-import shutil
 from pytz import timezone
-import os.path
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from google.oauth2 import service_account
-from pathlib import Path
-import re
 import numpy as np
+import pandas as pd
 
 def strRed(skk): return "\033[91m {}\033[00m".format(skk)
 def strGreen(skk): return "\033[92m {}\033[00m".format(skk)
@@ -36,24 +29,28 @@ fName = now_asia.strftime(format)
 curWeekday = datetime.today().weekday()
 isHolidayNxtDay = ""
 reqTime = ocTime[11:16]
-print(reqTime)
 reqSec = ocTime[14:16]
 intTime = int(reqTime[0:2])
 intSec = int(reqSec)
 nowTime = fName.split(" IST")
 print(nowTime[0])
-print(fName)
-if intTime >= 9 and intTime < 16:
+if intTime >= 9 and intTime < 20:
     while(intTime!=15 ):
-        print("Time: "+str(intTime))
-    # NiftyTomorroLevels = "22386"
-    # BankNiftyTomorrowLevels = "47172"
+        nsedf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=1)
+        bnfdf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=2)
+        nseLevels = nsedf['BO_LEVELS'].loc[nsedf.index[0]]
+        bnfLevels = bnfdf['BO_LEVELS'].loc[bnfdf.index[1]]
+        print("Nifty Levels : ",nseLevels)
+        print("Bnf Levels : ",bnfLevels)
+        nifty_minus_range = nseLevels - 15 
+        print("Nifty minus range : ",nifty_minus_range)
+        nifty_plus_range = nseLevels + 15
+        print("Nifty plus range : ", nifty_plus_range)
 
-        PE_NiftyTomorroLevels = 22366
-        PE_BankNiftyTomorrowLevels = 22406
-
-        CE_NiftyTomorroLevels=22398
-        CE_BankNiftyTomorrowLevels=47317
+        bnf_minus_range = bnfLevels - 20 
+        print("Bnf minus range : ",bnf_minus_range)
+        bnf_plus_range = bnfLevels + 20
+        print("Bnf plus range : ", bnf_plus_range)
 
         # Method to get nearest strikes
         def round_nearest(x, num=50): return int(math.ceil(float(x)/num)*num)
@@ -154,24 +151,18 @@ if intTime >= 9 and intTime < 16:
         print(send_lastprice())
         print(send_Bnflastprice())
 
-        niftyLastPrice_pe = int(send_lastprice()-20)
-        niftyLastPrice_ce = int(send_lastprice()+20)
-        bnfLastPrice_pe = int(send_Bnflastprice()-20)
-        bnfLastPrice_ce = int(send_Bnflastprice()+20)
-        if(niftyLastPrice_pe==PE_NiftyTomorroLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR PE BO: "+str(niftyLastPrice_pe)+"\n"+"=========================\n"
+        niftyLastPrice = int(send_lastprice())
+        bnfLastPrice = int(send_Bnflastprice())
+        if(niftyLastPrice in range(nifty_minus_range, nifty_plus_range)):
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR BO LEVEL: "+str(niftyLastPrice)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_nf(nf_ul))+"\n=========================\n"
             requests.post(t_url)
-        elif(niftyLastPrice_ce==CE_NiftyTomorroLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFTY TRADING NEAR CE BO: "+str(niftyLastPrice_ce)+"\n"+"=========================\n"
+        
+
+        if(bnfLastPrice in range (bnf_minus_range, bnf_plus_range)):
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR BO LEVEL: "+str(bnfLastPrice)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_bnf(bnf_ul))+"\n=========================\n"
             requests.post(t_url)
 
-        if(bnfLastPrice_pe==PE_BankNiftyTomorrowLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR PE BO: "+str(bnfLastPrice_pe)+"\n"+"=========================\n"
-            requests.post(t_url)
-
-        elif(bnfLastPrice_ce==PE_BankNiftyTomorrowLevels):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BANK-NIFTY TRADING NEAR CE BO: "+str(bnfLastPrice_ce)+"\n"+"=========================\n"
-            requests.post(t_url)
+        
         time.sleep(120)
         if(intTime>16):
             exit()
