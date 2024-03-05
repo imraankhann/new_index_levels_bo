@@ -164,6 +164,6 @@ if intTime >= 9 and intTime < 16:
 
         
         time.sleep(120)
-        if(intTime>16):
+        if(intTime>15):
             exit()
 
