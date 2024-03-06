@@ -153,6 +153,10 @@ if intTime >= 9 and intTime < 16:
 
         niftyLastPrice = int(send_lastprice())
         bnfLastPrice = int(send_Bnflastprice())
+        
+        #t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================"+"\nWELCOME TO AI BOT TRADING"+"\n======================"+"\nBOT STARTED SUCCESSFULLY..!"+"\n======================\n"+"TODAY's INDEX LEVELS\n"+"======================\n"+"NIFTY BO LEVEL: "+str(nseLevels)+"\n"+"=========================\n"+"BNF BO LEVEL: "+str(bnfLevels)+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE."+"\n TRADE AT YOUR OWN RISK..!"
+        #requests.post(t_url)  
+
         if(niftyLastPrice in range(nifty_minus_range, nifty_plus_range)):
             t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFYT CMP : "+str(niftyLastPrice)+"\n======================\n"+"NIFTY TRADING NEAR BO LEVEL: "+str(nseLevels)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_nf(nf_ul))+"\n=========================\n"
             requests.post(t_url)
