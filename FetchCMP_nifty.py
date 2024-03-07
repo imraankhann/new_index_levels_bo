@@ -86,17 +86,17 @@ if intTime >= 9 and intTime < 15:
         # Local methods
 
         def set_cookie():
-            request = sess.get(url_oc, headers=headers, timeout=5)
+            request = sess.get(url_oc, headers=headers, timeout=60)
             cookies = dict(request.cookies)
 
 
         def get_data(url):
             set_cookie()
-            response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
+            response = sess.get(url, headers=headers, timeout=60, cookies=cookies)
             if (response.status_code == 401):
                 set_cookie()
                 response = sess.get(url_nf, headers=headers,
-                                    timeout=5, cookies=cookies)
+                                    timeout=60, cookies=cookies)
             if (response.status_code == 200):
                 return response.text
             return ""
