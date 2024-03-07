@@ -9,15 +9,15 @@ from pytz import timezone
 import numpy as np
 import pandas as pd
 
-def strRed(skk): return "\033[91m {}\033[00m".format(skk)
-def strGreen(skk): return "\033[92m {}\033[00m".format(skk)
-def strYellow(skk): return "\033[93m {}\033[00m".format(skk)
-def strLightPurple(skk): return "\033[94m {}\033[00m".format(skk)
-def strPurple(skk): return "\033[95m {}\033[00m".format(skk)
-def strCyan(skk): return "\033[96m {}\033[00m".format(skk)
-def strLightGray(skk): return "\033[97m {}\033[00m".format(skk)
-def strBlack(skk): return "\033[98m {}\033[00m".format(skk)
-def strBold(skk): return "\033[1m {}\033[0m".format(skk)
+# def strRed(skk): return "\033[91m {}\033[00m".format(skk)
+# def strGreen(skk): return "\033[92m {}\033[00m".format(skk)
+# def strYellow(skk): return "\033[93m {}\033[00m".format(skk)
+# def strLightPurple(skk): return "\033[94m {}\033[00m".format(skk)
+# def strPurple(skk): return "\033[95m {}\033[00m".format(skk)
+# def strCyan(skk): return "\033[96m {}\033[00m".format(skk)
+# def strLightGray(skk): return "\033[97m {}\033[00m".format(skk)
+# def strBlack(skk): return "\033[98m {}\033[00m".format(skk)
+# def strBold(skk): return "\033[1m {}\033[0m".format(skk)
 
 
 now = datetime.now()
@@ -34,12 +34,22 @@ intTime = int(reqTime[0:2])
 intSec = int(reqSec)
 nowTime = fName.split(" IST")
 print(nowTime[0])
-if intTime >= 9 and intTime < 16:
+
+#Fetch Updated Index values from csv file
+nsedf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=1)
+bnfdf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=2)
+nseLevels = nsedf['BO_LEVELS'].loc[nsedf.index[0]]
+bnfLevels = bnfdf['BO_LEVELS'].loc[bnfdf.index[1]]
+
+#Notify Index values To Telegram Channel before 9AM
+if(intTime<9):
+    t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================"+"\nWELCOME TO AI BOT TRADING"+"\n======================"+"\nBOT STARTED SUCCESSFULLY..!"+"\n======================\n"+"TODAY's INDEX LEVELS\n"+"======================\n"+"NIFTY BO LEVEL: "+str(nseLevels)+"\n"+"=========================\n"+"BNF BO LEVEL: "+str(bnfLevels)+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE."+"\n----------------------------------------------"+"\nI AM NOT SEBI REG..!"+"\n----------------------------------------------"+"\nTRADE AT YOUR OWN RISK..!"+"\n----------------------------------------------\n"+"WISH YOU PROFITABLE DAY..!"
+    requests.post(t_url) 
+
+#Keep Running below code from 9AM to 3PM
+if intTime >= 9 and intTime < 15:
     while(intTime!=15 ):
-        nsedf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=1)
-        bnfdf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=2)
-        nseLevels = nsedf['BO_LEVELS'].loc[nsedf.index[0]]
-        bnfLevels = bnfdf['BO_LEVELS'].loc[bnfdf.index[1]]
+        
         print("Nifty Levels : ",nseLevels)
         print("Bnf Levels : ",bnfLevels)
         nifty_minus_range = nseLevels - 15 
@@ -62,7 +72,7 @@ if intTime >= 9 and intTime < 16:
         url_oc = "https://www.nseindia.com/option-chain"
         url_bnf = 'https://www.nseindia.com/api/option-chain-indices?symbol=BANKNIFTY'
         url_nf = 'https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY'
-        url_finNif = 'https://www.nseindia.com/api/option-chain-indices?symbol=FINNIFTY'
+        #url_finNif = 'https://www.nseindia.com/api/option-chain-indices?symbol=FINNIFTY'
         url_indices = "https://www.nseindia.com/api/allIndices"
 
         # Headers
@@ -111,13 +121,13 @@ if intTime >= 9 and intTime < 16:
 
 
         # Showing Header in structured format with Last Price and Nearest Strike
-        def print_header(index="", ul=0, nearest=0):
-            print(strPurple(index.ljust(12, " ") + " => ") + strLightPurple(" Last Price: ") +
-                strBold(str(ul)) + strLightPurple(" Nearest Strike: ") + strBold(str(nearest)))
+        # def print_header(index="", ul=0, nearest=0):
+        #     print(strPurple(index.ljust(12, " ") + " => ") + strLightPurple(" Last Price: ") +
+        #         strBold(str(ul)) + strLightPurple(" Nearest Strike: ") + strBold(str(nearest)))
 
 
-        def print_hr():
-            print(strYellow("|".rjust(70, "-")))
+        # def print_hr():
+        #     print(strYellow("|".rjust(70, "-")))
 
         def send_lastprice():
             global nf_ul
@@ -148,22 +158,20 @@ if intTime >= 9 and intTime < 16:
             return bnf_ul
 
         #print_header("Nifty", nf_ul, nf_nearest)
-        print(send_lastprice())
-        print(send_Bnflastprice())
+        print("NIFTY CMP: ",send_lastprice())
+        print("BNF CMP: ",send_Bnflastprice())
 
         niftyLastPrice = int(send_lastprice())
         bnfLastPrice = int(send_Bnflastprice())
         
-        #t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================"+"\nWELCOME TO AI BOT TRADING"+"\n======================"+"\nBOT STARTED SUCCESSFULLY..!"+"\n======================\n"+"TODAY's INDEX LEVELS\n"+"======================\n"+"NIFTY BO LEVEL: "+str(nseLevels)+"\n"+"=========================\n"+"BNF BO LEVEL: "+str(bnfLevels)+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE."+"\n TRADE AT YOUR OWN RISK..!"
-        #requests.post(t_url)  
 
         if(niftyLastPrice in range(nifty_minus_range, nifty_plus_range)):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFYT CMP : "+str(niftyLastPrice)+"\n======================\n"+"NIFTY TRADING NEAR BO LEVEL: "+str(nseLevels)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_nf(nf_ul))+"\n=========================\n"
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"NIFYT CMP : "+str(niftyLastPrice)+"\n======================\n"+"NIFTY TRADING NEAR BO LEVEL: "+str(nseLevels)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_nf(nf_ul))+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE.\n"+"----------------------------------------------\n"+"I AM NOT SEBI REG..!"+"\n----------------------------------------------"+"\nTRADE AT YOUR OWN RISK..!"
             requests.post(t_url)
         
 
         if(bnfLastPrice in range (bnf_minus_range, bnf_plus_range)):
-            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BNF CMP : "+str(bnfLastPrice)+"\n======================\n"+"BANK-NIFTY TRADING NEAR BO LEVEL: "+str(bnfLevels)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_bnf(bnf_ul))+"\n=========================\n"
+            t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================\n"+"PYTHON-BOT FOR TODAY's LEVELS\n"+"======================\n"+"BNF CMP : "+str(bnfLastPrice)+"\n======================\n"+"BANK-NIFTY TRADING NEAR BO LEVEL: "+str(bnfLevels)+"\n"+"\n=========================\n"+"CHOOSE STRIKE : "+str(nearest_strike_bnf(bnf_ul))+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE.\n"+"----------------------------------------------\n"+"I AM NOT SEBI REG..!"+"\n----------------------------------------------"+"\nTRADE AT YOUR OWN RISK..!"
             requests.post(t_url)
 
         
