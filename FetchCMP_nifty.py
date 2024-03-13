@@ -49,7 +49,7 @@ if(intTime<9):
     requests.post(t_url) 
 
 #Keep Running below code from 9AM to 3PM
-if intTime >= 8 and intTime < 15:
+if intTime >= 9 and intTime < 15:
     while(intTime!=15 ):
         counter+1
         print("Nifty Levels : ",nseLevels)
