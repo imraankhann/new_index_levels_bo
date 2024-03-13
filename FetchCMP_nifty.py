@@ -33,7 +33,9 @@ reqSec = ocTime[14:16]
 intTime = int(reqTime[0:2])
 intSec = int(reqSec)
 nowTime = fName.split(" IST")
+curTime = nowTime[0].split(" ")
 print(nowTime[0])
+counter = 1
 
 #Fetch Updated Index values from csv file
 nsedf = pd.read_csv('./index_levels.csv',usecols=['BO_LEVELS'],nrows=1)
@@ -47,9 +49,9 @@ if(intTime<9):
     requests.post(t_url) 
 
 #Keep Running below code from 9AM to 3PM
-if intTime >= 9 and intTime < 15:
+if intTime >= 8 and intTime < 15:
     while(intTime!=15 ):
-        
+        counter+1
         print("Nifty Levels : ",nseLevels)
         print("Bnf Levels : ",bnfLevels)
         nifty_minus_range = nseLevels - 15 
@@ -158,11 +160,13 @@ if intTime >= 9 and intTime < 15:
             return bnf_ul
 
         #print_header("Nifty", nf_ul, nf_nearest)
-        print("NIFTY CMP: ",send_lastprice())
-        print("BNF CMP: ",send_Bnflastprice())
+        print("NIFTY CMP : ",send_lastprice())
+        print("BNF CMP : ",send_Bnflastprice())
 
         niftyLastPrice = int(send_lastprice())
         bnfLastPrice = int(send_Bnflastprice())
+        print("Run Time : ", curTime[1])
+        print("Counter : ", counter)
         
 
         if(niftyLastPrice in range(nifty_minus_range, nifty_plus_range)):
@@ -176,6 +180,7 @@ if intTime >= 9 and intTime < 15:
 
         
         time.sleep(120)
-        if(intTime>15):
+        if(intTime>14):
+            print("PROGRAM EXIT AT : ", curTime[1])
             exit()
 
