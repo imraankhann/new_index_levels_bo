@@ -26,6 +26,9 @@ now_utc = datetime.now(timezone('UTC'))
 now_asia = now_utc.astimezone(timezone('Asia/Kolkata'))
 ocTime = now_asia.strftime(format)
 fName = now_asia.strftime(format)
+tdate = fName.split(" IST")
+nowTime = tdate[0]
+print(nowTime)
 curWeekday = datetime.today().weekday()
 dtTime = fName.split(" IST")
 dt = dtTime[0].split(" ")
@@ -44,7 +47,7 @@ bnfLevels = bnfdf['BO_LEVELS'].loc[bnfdf.index[1]]
 
 #Notify Index values To Telegram Channel before 9AM
 if(intTime<9):
-    t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime[0]+"\n======================"+"\nWELCOME TO AI BOT TRADING"+"\n======================"+"\nBOT STARTED SUCCESSFULLY..!"+"\n======================\n"+"TODAY's INDEX LEVELS\n"+"======================\n"+"NIFTY BO LEVEL: "+str(nseLevels)+"\n"+"=========================\n"+"BNF BO LEVEL: "+str(bnfLevels)+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE."+"\n----------------------------------------------"+"\nI AM NOT SEBI REG..!"+"\n----------------------------------------------"+"\nTRADE AT YOUR OWN RISK..!"+"\n----------------------------------------------\n"+"WISH YOU PROFITABLE DAY..!"
+    t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime+"\n======================"+"\nWELCOME TO AI BOT TRADING"+"\n======================"+"\nBOT STARTED SUCCESSFULLY..!"+"\n======================\n"+"TODAY's INDEX LEVELS\n"+"======================\n"+"NIFTY BO LEVEL: "+str(nseLevels)+"\n"+"=========================\n"+"BNF BO LEVEL: "+str(bnfLevels)+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE."+"\n----------------------------------------------"+"\nI AM NOT SEBI REG..!"+"\n----------------------------------------------"+"\nTRADE AT YOUR OWN RISK..!"+"\n----------------------------------------------\n"+"WISH YOU PROFITABLE DAY..!"
     requests.post(t_url) 
 
 #Keep Running below code from 9AM to 3PM
