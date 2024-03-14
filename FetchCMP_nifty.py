@@ -49,7 +49,8 @@ bnfLevels = bnfdf['BO_LEVELS'].loc[bnfdf.index[1]]
 if(intTime<9):
     t_url = "https://api.telegram.org/bot6377307246:AAEuJAlBiQgDQEa03yNmKQJmZbXyQ0WINOk/sendMessage?chat_id=-996001230&text="+"======================\n"+nowTime+"\n======================"+"\nWELCOME TO AI BOT TRADING"+"\n======================"+"\nBOT STARTED SUCCESSFULLY..!"+"\n======================\n"+"TODAY's INDEX LEVELS\n"+"======================\n"+"NIFTY BO LEVEL: "+str(nseLevels)+"\n"+"=========================\n"+"BNF BO LEVEL: "+str(bnfLevels)+"\n=========================\n"+"NOTE : ONLY FOR EDUCATIONAL PURPOSE."+"\n----------------------------------------------"+"\nI AM NOT SEBI REG..!"+"\n----------------------------------------------"+"\nTRADE AT YOUR OWN RISK..!"+"\n----------------------------------------------\n"+"WISH YOU PROFITABLE DAY..!"
     requests.post(t_url) 
-
+c = datetime.now()
+runTm = c.strftime('%H:%M:%S')
 #Keep Running below code from 9AM to 3PM
 if intTime >= 9 and intTime < 15:
     while(intTime!=15 ):
@@ -183,7 +184,7 @@ if intTime >= 9 and intTime < 15:
 
         
         time.sleep(120)
-        if(intTime>14):
-            print("PROGRAM EXIT AT : ", runTime)
-            exit()
+if(intTime>14):
+    print("PROGRAM EXIT AT : ", runTm)
+    exit()
 
