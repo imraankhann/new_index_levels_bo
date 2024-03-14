@@ -29,8 +29,6 @@ fName = now_asia.strftime(format)
 curWeekday = datetime.today().weekday()
 dtTime = fName.split(" IST")
 dt = dtTime[0].split(" ")
-print(dt[0])
-print(dtTime[0])
 isHolidayNxtDay = ""
 reqTime = ocTime[11:16]
 reqSec = ocTime[14:16]
