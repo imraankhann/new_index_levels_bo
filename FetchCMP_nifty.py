@@ -53,13 +53,11 @@ if(intTime<9):
 c = datetime.now()
 runTm = c.strftime('%H:%M:%S')
 
-if(intTime>14):
-    print("PROGRAM EXIT AT : ", runTm)
-    exit()
-
 #Keep Running below code from 9AM to 3PM
-if intTime >= 9 and intTime < 14:
+if intTime >= 9 and intTime < 15:
     while(intTime<14 ):
+        if intTime>13:
+            break
         c = datetime.now()
         runTime = c.strftime('%H:%M:%S')
         print("Nifty Levels : ",nseLevels)
@@ -191,4 +189,6 @@ if intTime >= 9 and intTime < 14:
         
         time.sleep(120)
 
-
+if(intTime>14):
+    print("PROGRAM EXIT AT : ", runTm)
+    exit()
